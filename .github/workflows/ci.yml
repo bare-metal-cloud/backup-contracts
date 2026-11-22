@@ -16,7 +16,7 @@ concurrency:
 jobs:
   lint:
     timeout-minutes: 40
-    runs-on: [self-hosted, linux, x64]
+    runs-on: namespace-profile-bmc
     steps:
       - uses: actions/checkout@v4
         with:
@@ -24,6 +24,7 @@ jobs:
       - uses: actions/setup-go@v6
         with:
           go-version: "1.26.1"
+          cache: false
       - name: golangci-lint (pinned to the backend lint-parity version)
         run: |
           go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@v2.13.2
@@ -35,12 +36,13 @@ jobs:
 
   test:
     timeout-minutes: 40
-    runs-on: [self-hosted, linux, x64]
+    runs-on: namespace-profile-bmc
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-go@v6
         with:
           go-version: "1.26.1"
+          cache: false
       - run: go vet ./...
       - run: go test -race ./...
       - run: go build ./...
